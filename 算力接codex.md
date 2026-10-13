@@ -3,6 +3,8 @@
 适用环境：Windows + VS Code + OpenAI Codex 插件
 
 **目标：** 使用 Paratera 提供的模型，同时保留原本的 ChatGPT Codex，随时切换。
+## 0. vscode 内下载codex插件
+![codex插件](images/codex.png)
 
 ## 1. 准备 API Key
 
