@@ -16,6 +16,7 @@
       <span class="muted">项目模板站</span>
     </div>
     <nav class="nav">
+      <a href="#ai">AI 助手</a>
       <a href="#board">任务板</a>
       <a href="#team">团队</a>
       <a href="#resources">资源</a>
@@ -30,11 +31,11 @@
     <p class="tag">静态模板 · 零依赖 · 单页应用</p>
     <h1>把选题、进度和资料<br>收进一个页面</h1>
     <p class="lead">
-      这是一个开箱即用的项目模板：任务板自动保存到浏览器本地，进度条实时统计，团队与资源一处可查。
-      内容都是占位的，改完直接提交推送即可。
+      这是一个开箱即用的项目模板：内置 AI 对话（接 OpenAI 兼容接口），任务板自动保存到浏览器本地，
+      进度条实时统计，团队与资源一处可查。内容都是占位的，改完直接提交推送即可。
     </p>
     <div class="cta">
-      <a class="btn primary" href="#board">开始记任务</a>
+      <a class="btn primary" href="#ai">试试 AI 助手</a>
       <a class="btn ghost" href="https://github.com/hqching77/test" target="_blank" rel="noreferrer">查看仓库</a>
     </div>
     <div class="stats">
@@ -47,7 +48,71 @@
 </section>
 
 <main>
-  <section id="board" class="section">
+  <section id="ai" class="section">
+    <div class="wrap">
+      <h2>AI 助手</h2>
+      <p class="sub">
+        走 OpenAI 兼容接口，默认指向 Paratera（<code>https://llmapi.paratera.com/v1</code>）。
+        模型 ID 要和 Paratera 控制台里看到的完全一致，例如 <code>Qwen3.6-Flash</code>。
+      </p>
+
+      <div class="ai-layout">
+        <div class="ai-panel">
+          <div class="ai-head">
+            <span id="aiStatus" class="badge wait">检测中…</span>
+            <span class="muted small" id="aiHint">正在探测本地代理…</span>
+          </div>
+
+          <div id="aiLog" class="ai-log" aria-live="polite"></div>
+
+          <form id="aiForm" class="ai-form" autocomplete="off">
+            <textarea id="aiInput" rows="3" placeholder="问点什么…（Enter 发送，Shift+Enter 换行）"></textarea>
+            <div class="ai-actions">
+              <button id="aiReset" class="chip" type="button">清空会话</button>
+              <span class="spacer"></span>
+              <button id="aiStop" class="btn ghost" type="button" disabled>停止</button>
+              <button id="aiSend" class="btn primary" type="submit">发送</button>
+            </div>
+          </form>
+        </div>
+
+        <details class="ai-config">
+          <summary>接口配置</summary>
+          <div class="cfg-body">
+            <label>接口地址 Base URL
+              <input id="cfgBase" type="text" spellcheck="false" value="https://llmapi.paratera.com/v1">
+            </label>
+            <label>模型 ID
+              <input id="cfgModel" type="text" spellcheck="false" value="Qwen3.6-Flash">
+            </label>
+            <label>接口类型
+              <select id="cfgWire">
+                <option value="chat">chat/completions（普通对话，推荐）</option>
+                <option value="responses">responses（Codex 用的那种）</option>
+              </select>
+            </label>
+            <label>系统提示词
+              <textarea id="cfgSystem" rows="3">你是 EE 黑客松的编程助手，回答简洁、给可直接运行的代码，必要时指出坑在哪里。</textarea>
+            </label>
+            <label>API Key（仅"浏览器直连"模式需要）
+              <input id="cfgKey" type="password" spellcheck="false" placeholder="sk-…">
+            </label>
+            <p class="note warn">
+              直连模式下 Key 存在浏览器 localStorage 里，任何能打开这个页面的人都能读到它，
+              只适合自己机器上的临时调试。开着 <code>server.py</code> 时走本地代理，Key 由服务端从环境变量读，页面里留空即可。
+            </p>
+            <div class="cfg-actions">
+              <button id="cfgSave" class="btn primary" type="button">保存到浏览器</button>
+              <button id="cfgTest" class="btn ghost" type="button">测试连接</button>
+              <button id="cfgWipe" class="chip danger" type="button">清除已存 Key</button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="board" class="section alt">
     <div class="wrap">
       <h2>任务板</h2>
       <p class="sub">数据存在浏览器 localStorage 里，关掉页面也在。想重置就清掉这个站点的站点数据。</p>
@@ -71,7 +136,7 @@
     </div>
   </section>
 
-  <section id="team" class="section alt">
+  <section id="team" class="section">
     <div class="wrap">
       <h2>团队</h2>
       <p class="sub">改名字和分工就行，卡片数量随意增减。</p>
@@ -84,7 +149,7 @@
     </div>
   </section>
 
-  <section id="resources" class="section">
+  <section id="resources" class="section alt">
     <div class="wrap">
       <h2>资源</h2>
       <p class="sub">黑客松相关的仓库、教程和算力入口。</p>
@@ -113,15 +178,15 @@
     </div>
   </section>
 
-  <section id="open" class="section alt">
+  <section id="open" class="section">
     <div class="wrap">
       <h2>本地打开</h2>
-      <p class="sub">三种方式，任选一种。</p>
+      <p class="sub">四种方式，按需选。要玩 AI 助手就用第 4 种，其余三种只影响页面本身。</p>
       <div class="grid three">
         <div class="card">
           <h3>1 · 直接双击</h3>
           <p>在文件管理器里双击 <code>index.html</code>，用默认浏览器打开。</p>
-          <p class="muted">最简单；但地址栏是 <code>file:///…</code>，个别浏览器会限制本地文件的脚本权限。</p>
+          <p class="muted">最简单；但地址栏是 <code>file:///…</code>，AI 助手只能走"浏览器直连"并需要填 Key。</p>
         </div>
         <div class="card">
           <h3>2 · VS Code 预览</h3>
@@ -129,9 +194,17 @@
           <p class="muted">改代码即时刷新，写页面最舒服。</p>
         </div>
         <div class="card">
-          <h3>3 · 起个本地服务</h3>
+          <h3>3 · 纯静态服务</h3>
           <p>在项目目录执行 <code>python -m http.server 8000</code>，然后访问 <code>http://localhost:8000</code>。</p>
-          <p class="muted">最接近真实部署环境，推荐。本机有 Python 3.14，直接可用。</p>
+          <p class="muted">最接近真实部署环境。本机有 Python 3.14，直接可用。</p>
+        </div>
+        <div class="card">
+          <h3>4 · 带 AI 代理启动 ★</h3>
+          <p>执行 <code>python server.py</code>，访问 <code>http://localhost:8000</code>。</p>
+          <p class="muted">
+            除了发静态文件，还多一个 <code>/api/chat</code> 转发口：请求由 Python 代发，顺手解决浏览器跨域（CORS）问题，
+            API Key 也从环境变量 <code>PARATERA_API_KEY</code> 读，不用写进页面。
+          </p>
         </div>
       </div>
     </div>
@@ -145,6 +218,7 @@
   </div>
 </footer>
 
+<script src="ai.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
