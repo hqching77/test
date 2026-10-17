@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ClassReplay 将课堂资料变成知识网络、逐点讲解与个性化练习。">
+  <title>ClassReplay · 课堂重现</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <header class="topbar">
+    <button class="brand" id="brandBtn" aria-label="回到首页"><span class="brand-mark">CR</span><span><strong>ClassReplay</strong><small>课堂重现</small></span></button>
+    <div class="top-actions"><span class="status-pill" id="aiStatus"><i></i> 正在检查 AI</span><button class="icon-btn" id="themeBtn" title="切换主题">◐</button></div>
+  </header>
+
+  <main>
+    <section id="homeView" class="view active">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">AI-POWERED LEARNING PATH</span>
+          <h1>下课了，<br><em>理解才刚开始。</em></h1>
+          <p>上传课堂材料，让零散的信息重新连成一条清晰、可提问、可检测的学习路径。</p>
+          <div class="hero-metrics"><div><strong>5</strong><span>步学习闭环</span></div><div><strong>1 min</strong><span>生成复习路径</span></div><div><strong>∞</strong><span>次追问与练习</span></div></div>
+        </div>
+        <div class="upload-card">
+          <div class="card-label"><span>01</span> 导入课堂</div>
+          <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="上传课堂文件">
+            <input id="fileInput" type="file" accept=".txt,.md,.pdf,.pptx,.docx" hidden>
+            <div class="upload-icon">↗</div><h2>把课堂材料放在这里</h2><p>拖拽文件，或 <u>点击选择</u></p>
+            <div class="format-list"><span>PDF</span><span>PPTX</span><span>DOCX</span><span>笔记</span></div>
+          </div>
+          <button class="primary-btn" id="demoBtn">体验示例课堂 <span>→</span></button>
+          <p class="privacy-note">⌁ 文件仅在本地处理，不会被上传</p>
+        </div>
+      </div>
+      <section class="how-it-works">
+        <div class="section-heading"><span>HOW IT WORKS</span><h2>不是摘要，是重建理解。</h2></div>
+        <div class="feature-grid">
+          <article><b>01</b><div class="feature-icon">⌕</div><h3>剥离知识点</h3><p>从讲义与笔记中识别概念、定义、例子和学习目标。</p></article>
+          <article><b>02</b><div class="feature-icon">⌘</div><h3>连接知识网络</h3><p>找到先修、因果与应用关系，看到课程真正的内在逻辑。</p></article>
+          <article><b>03</b><div class="feature-icon">✓</div><h3>练习确认掌握</h3><p>针对每个知识点生成问题，用解释反馈补齐薄弱环节。</p></article>
+        </div>
+      </section>
+      <section class="history-section" id="historySection">
+        <div class="section-heading inline"><div><span>RECENT CLASSES</span><h2>继续上次的学习</h2></div><button class="text-btn" id="clearHistoryBtn">清除记录</button></div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </section>
+
+    <section id="loadingView" class="view loading-view">
+      <div class="loader-orbit"><div></div><span id="loadingPercent">0%</span></div><span class="eyebrow">REBUILDING YOUR CLASS</span>
+      <h1 id="loadingTitle">正在读取课堂材料</h1><p id="loadingHint">我们正在从零散信息中寻找课程的主线。</p>
+      <div class="process-steps" id="processSteps"><div class="active"><i>1</i><span>提取内容</span></div><div><i>2</i><span>识别知识点</span></div><div><i>3</i><span>构建关系</span></div><div><i>4</i><span>生成练习</span></div></div>
+    </section>
+
+    <section id="workspaceView" class="view workspace-view">
+      <aside class="sidebar">
+        <button class="back-btn" id="backBtn">← 返回课程</button>
+        <div class="course-mini"><span class="course-tag" id="courseTag">计算机科学</span><h2 id="sideTitle">课程标题</h2><p id="sideMeta">已生成学习路径</p></div>
+        <nav id="stepNav">
+          <button class="active" data-step="overview"><i>1</i><span>课程概览<small>找到学习主线</small></span></button>
+          <button data-step="prerequisites"><i>2</i><span>前置知识<small>补齐理解基础</small></span></button>
+          <button data-step="network"><i>3</i><span>知识网络<small>看见概念联系</small></span></button>
+          <button data-step="learn"><i>4</i><span>知识点学习<small>逐点深入理解</small></span></button>
+          <button data-step="quiz"><i>5</i><span>练习检测<small>确认真实掌握</small></span></button>
+        </nav>
+        <div class="progress-card"><div><span>学习进度</span><strong id="progressText">20%</strong></div><div class="bar"><i id="progressBar"></i></div><small id="progressHint">完成所有步骤，构建完整理解</small></div>
+      </aside>
+      <div class="workspace-main">
+        <header class="workspace-header"><div><span class="crumb">课堂 / <b id="currentCrumb">课程概览</b></span><h1 id="workspaceTitle">先看清这节课的全貌</h1></div><button class="outline-btn" id="exportBtn">导出笔记 ↓</button></header>
+        <div id="contentArea" class="content-area"></div>
+      </div>
+      <aside class="tutor" id="tutorPanel">
+        <div class="tutor-head"><div class="avatar">✦</div><div><strong>课堂助教</strong><span><i></i> 基于当前课程</span></div><button class="icon-btn mobile-close" id="closeTutor">×</button></div>
+        <div class="messages" id="messages"></div>
+        <div class="quick-prompts" id="quickPrompts"><button>用更简单的话解释</button><button>给我一个生活中的例子</button><button>出一道题考考我</button></div>
+        <form class="chat-box" id="chatForm"><textarea id="chatInput" rows="2" placeholder="关于这节课，随时问我…"></textarea><button type="submit">↑</button></form>
+      </aside>
+      <button class="floating-tutor" id="openTutor">✦</button>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
